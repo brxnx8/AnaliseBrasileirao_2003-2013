@@ -1,32 +1,28 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+    <head>
+        <title>Trabalho Visualização de Dados</title>
+        <meta charset="utf-8" />
 
-<head>
-    <title>Trabalho Visualização de Dados</title>
-    <meta charset="utf-8" />
+        <script src="https://cdn.jsdelivr.net/npm/vega"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-lite"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-embed"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/vega"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-lite"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed"></script>
+        <style>
+            #vis {
+                margin: 10px;
+            }
 
-    <style>
-        #vis {
-            margin: 10px;
-        }
+            h1 {
+                margin: 10px;
+                margin-left: 50px;
+            }
+        </style>
+    </head>
 
-        h1 {
-            margin: 10px;
-            margin-left: 50px;
-        }
-    </style>
-
-</head>
-
-<body>
-    <h1>Brasileirão 2003-2023</h1>
-    <div id="vis"></div>
-
-</body>
-<script src="main.js"></script>
-
+    <body>
+        <h1>Brasileirão 2015-2023</h1>
+        <div id="vis"></div>
+    </body>
+    <script src="main.js"></script>
 </html>
