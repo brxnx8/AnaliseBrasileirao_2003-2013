@@ -1,58 +1,180 @@
 {
-    "data": {
-        "url": "../data/campeonato-brasileiro-estatisticas-full.csv"
-    },
-    "mark": {
-        "type": "bar"
-    },
-    "transform": [
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+
+    "params": [
         {
-            "filter": "datum.Director != null"
-        },
-        {
-            "aggregate": [
-                {
-                    "op": "sum",
-                    "field": "Worldwide_Gross",
-                    "as": "Gross"
-                }
-            ],
-            "groupby": [
-                "Director"
-            ]
-        },
-        {
-            "window": [
-                {
-                    "op": "rank",
-                    "as": "Rank"
-                }
-            ],
-            "sort": [
-                {
-                    "field": "Gross",
-                    "order": "descending"
-                }
-            ]
-        },
-        {
-            "filter": "datum.Rank < 20"
-        }
-    ],
-    "encoding": {
-        "x": {
-            "field": "Gross",
-            "type": "quantitative"
-        },
-        "y": {
-            "field": "Director",
-            "type": "nominal",
-            "sort": {
-                "field": "Gross",
-                "order": "descending"
+            "name": "SelectedYear",
+            "value": 2023,
+            "bind": {
+                "input": "select",
+                "options": [
+                    2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023
+                ],
+                "name": "Selecione o Ano: "
             }
         }
-    },
-    "width": 400,
-    "height": 400
+    ],
+    "align": "each",
+    "center": true,
+    "spacing": 0,
+    "columns": 2,
+    "concat": [
+        {
+            "title": "Contagem de Resultados como Mandante",
+            "data": { "url": "./data/campeonato-brasileiro-full.csv" },
+            "transform": [
+                { "filter": "datum.ano == SelectedYear" },
+                {
+                    "calculate": "datum.vencedor === datum.mandante ? 'Vitoria' : datum.vencedor === datum.visitante ? 'Derrota' : 'Empate'",
+                    "as": "resultado_mandante"
+                },
+                {
+                    "aggregate": [
+                        {
+                            "op": "count",
+                            "field": "resultado_mandante",
+                            "as": "quantidade"
+                        }
+                    ],
+                    "groupby": ["mandante", "resultado_mandante"]
+                }
+            ],
+            "mark": "bar",
+            "encoding": {
+                "x": {
+                    "field": "mandante",
+                    "title": "Time",
+                    "type": "nominal"
+                },
+                "y": {
+                    "field": "quantidade",
+                    "title": "Resultados",
+                    "type": "quantitative"
+                },
+                "xOffset": { "field": "resultado_mandante" },
+                "color": {
+                    "field": "resultado_mandante",
+                    "title": "Resultado",
+                    "scale": {
+                        "domain": ["Vitoria", "Derrota", "Empate"],
+                        "range": ["green", "red", "grey"]
+                    }
+                },
+                "tooltip": [
+                    { "field": "mandante", "title": "Time" },
+                    { "field": "resultado_mandante", "title": "Resultado" },
+                    { "field": "quantidade", "title": "Quantidade" }
+                ]
+            },
+
+            "width": 800
+        },
+        {
+            "title": "Contagem de Resultados como Visitante",
+            "data": { "url": "./data/campeonato-brasileiro-full.csv" },
+            "transform": [
+                { "filter": "datum.ano == SelectedYear" },
+                {
+                    "calculate": "datum.vencedor === datum.visitante ? 'Vitoria' : datum.vencedor === datum.mandante ? 'Derrota' : 'Empate'",
+                    "as": "resultado_visitante"
+                },
+                {
+                    "aggregate": [
+                        {
+                            "op": "count",
+                            "field": "resultado_visitante",
+                            "as": "quantidade"
+                        }
+                    ],
+                    "groupby": ["visitante", "resultado_visitante"]
+                }
+            ],
+            "mark": "bar",
+            "encoding": {
+                "x": {
+                    "field": "visitante",
+                    "title": "Time",
+                    "type": "nominal"
+                },
+                "y": {
+                    "field": "quantidade",
+                    "title": "Resultados",
+                    "type": "quantitative"
+                },
+                "xOffset": { "field": "resultado_visitante" },
+                "color": {
+                    "field": "resultado_visitante",
+                    "title": "Resultado",
+                    "scale": {
+                        "domain": ["Vitoria", "Derrota", "Empate"],
+                        "range": ["green", "red", "grey"]
+                    }
+                },
+                "tooltip": [
+                    { "field": "visitante", "title": "Time" },
+                    { "field": "resultado_visitante", "title": "Resultado" },
+                    { "field": "quantidade", "title": "Quantidade" }
+                ]
+            },
+
+            "width": 800
+        },
+        {
+            "title": "Formações Vencedoras ao longo dos Anos",
+            "data": {
+                "url": "./data/campeonato-brasileiro-full.csv"
+            },
+            "transform": [
+                { "filter": "datum.vencedor != '-'" },
+                {
+                    "calculate": "datum.vencedor === datum.mandante ? datum.formacao_mandante : datum.formacao_visitante",
+                    "as": "formacao_vencedora"
+                },
+                
+                {
+                    "calculate": "datum.formacao_vencedora ? datum.formacao_vencedora : 'Desconhecida'",
+                    "as": "formacao_vencedora"
+                },
+                {
+                    "aggregate": [
+                        {
+                            "op": "count",
+                            "field": "formacao_vencedora",
+                            "as": "total_vitorias"
+                        }
+                    ],
+                    "groupby": ["ano", "formacao_vencedora"]
+                }
+            ],
+            "mark": {
+                "type": "rect"
+            },
+            "encoding": {
+                "x": {
+                    "field": "ano",
+                    "type": "ordinal",
+                    "title": "Ano"
+                },
+                "y": {
+                    "field": "total_vitorias",
+                    "type": "quantitative",
+                    "title": "Quantidade de Vitórias"
+                },
+                "color": {
+                    "field": "formacao_vencedora",
+                    "type": "nominal",
+                    "title": "Formação"
+                },
+                "tooltip": [
+                    { "field": "ano", "title": "Ano" },
+                    { "field": "formacao_vencedora", "title": "Formação" },
+                    {
+                        "field": "total_vitorias",
+                        "title": "Quantidade de Vitórias"
+                    }
+                ]
+            },
+            "width": 700
+        }
+    ]
 }

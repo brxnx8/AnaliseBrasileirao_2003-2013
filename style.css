@@ -1,6 +1,13 @@
+h1{
+    text-align: center;
+}
 div#vis0, div#vis1, div#vis2, div#vis3{
     display: flex;
     align-content: center;
     align-items: center;
     justify-content: center;
+    padding: 10px;
+}
+div#vis0, div#vis2, div#vis4{
+    background-color: rgba(128, 128, 128, 0.086);
 }

@@ -1,0 +1,141 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+
+    "params": [
+        {
+            "name": "SelectedYear",
+            "value": 2023,
+            "bind": {
+                "input": "select",
+                "options": [
+                    2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023
+                ],
+                "name": "Selecione o Ano: "
+            }
+        }
+    ],
+    "align": "each",
+    "center": true,
+    "spacing": 0,
+    "columns": 2,
+    "concat": [
+        {
+            "title": "Chutes Totais vs Chutes no Alvo e Gols por Clube",
+            "data": {
+                "url": "./data/campeonato-brasileiro-estatisticas-full.csv"
+            },
+            "transform": [
+                {
+                    "aggregate": [
+                        {
+                            "op": "sum",
+                            "field": "chutes",
+                            "as": "total_chutes"
+                        },
+                        {
+                            "op": "sum",
+                            "field": "chutes_no_alvo",
+                            "as": "total_chutes_no_alvo"
+                        }
+                    ],
+                    "groupby": ["partida_id", "clube"]
+                },
+                {
+                    "lookup": "partida_id",
+                    "from": {
+                        "data": {
+                            "url": "./data/campeonato-brasileiro-gols.csv"
+                        },
+                        "key": "partida_id",
+                        "fields": ["clube"]
+                    },
+                    "as": ["clube_gol"]
+                },
+                {
+                    "aggregate": [
+                        {
+                            "op": "count",
+                            "field": "clube_gol",
+                            "as": "total_gols"
+                        }
+                    ],
+                    "groupby": ["partida_id", "clube"]
+                }
+            ],
+            "mark": "point",
+            "encoding": {
+                "x": {
+                    "field": "total_chutes",
+                    "type": "quantitative",
+                    "title": "Total de Chutes"
+                },
+                "y": {
+                    "field": "total_chutes_no_alvo",
+                    "type": "quantitative",
+                    "title": "Total de Chutes no Alvo"
+                },
+                "size": {
+                    "field": "total_gols",
+                    "type": "quantitative",
+                    "title": "Total de Gols"
+                },
+                "color": {
+                    "field": "clube",
+                    "type": "nominal",
+                    "title": "Clube"
+                },
+                "tooltip": [
+                    { "field": "clube", "title": "Clube" },
+                    { "field": "total_chutes", "title": "Chutes Totais" },
+                    {
+                        "field": "total_chutes_no_alvo",
+                        "title": "Chutes no Alvo"
+                    },
+                    { "field": "total_gols", "title": "Gols Marcados" }
+                ]
+            },
+            "width": 700,
+            "height": 500
+        },
+        {
+            "title": "Número de Impedimentos ao Longo dos Anos",
+            "data": {
+                "url": "./data/campeonato-brasileiro-full.csv"
+            },
+            "transform": [
+                {
+                    "aggregate": [
+                        {
+                            "op": "sum",
+                            "field": "impedimentos",
+                            "as": "total_impedimentos"
+                        }
+                    ],
+                    "groupby": ["ano"]
+                }
+            ],
+            "mark": "line",
+            "encoding": {
+                "x": {
+                    "field": "ano",
+                    "type": "ordinal",
+                    "title": "Ano"
+                },
+                "y": {
+                    "field": "total_impedimentos",
+                    "type": "quantitative",
+                    "title": "Total de Impedimentos"
+                },
+                "tooltip": [
+                    { "field": "ano", "title": "Ano" },
+                    {
+                        "field": "total_impedimentos",
+                        "title": "Total de Impedimentos"
+                    }
+                ]
+            },
+            "width": 700,
+            "height": 400
+        }
+    ]
+}

@@ -19,6 +19,89 @@
     "spacing": 0,
     "columns": 2,
     "concat": [
+        {
+
+        "title": "Quantidade de gols por Time e Rodada",
+        "data": { "url": "./data/campeonato-brasileiro-gols.csv" },
+        "transform": [
+            { "filter": "datum.ano == SelectedYear" },
+            {
+                "aggregate": [
+                    { "op": "count", "field": "*", "as": "quantidade" }
+                ],
+                "groupby": ["rodada", "clube"]
+            }
+        ],
+        "mark": "rect",
+        "encoding": {
+            "x": {
+                "field": "rodada",
+                "type": "ordinal",
+                "title": "Rodada",
+                "axis": { "labelAngle": 0 },
+                "sort": [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "9",
+                    "10",
+                    "11",
+                    "12",
+                    "13",
+                    "14",
+                    "15",
+                    "16",
+                    "17",
+                    "18",
+                    "19",
+                    "20",
+                    "21",
+                    "22",
+                    "23",
+                    "24",
+                    "25",
+                    "26",
+                    "27",
+                    "28",
+                    "29",
+                    "30",
+                    "31",
+                    "32",
+                    "33",
+                    "34",
+                    "35",
+                    "36",
+                    "37",
+                    "38"
+                ]
+            },
+            "y": {
+                "field": "clube",
+                "type": "nominal",
+                "title": "Time",
+                "sort": "-color"
+            },
+            "color": {
+                "field": "quantidade",
+                "type": "quantitative",
+                "title": "Quantidade de Gols",
+                "scale": { "scheme": "reds" }
+            },
+            "tooltip": [
+                { "field": "clube", "title": "Time" },
+                { "field": "rodada", "title": "Rodada" },
+                { "field": "quantidade", "title": "Quantidade de Gols" }
+            ]
+        },
+
+        "width": 500,
+        "height": 350
+    },
         
         {
             "title": "Top 10 Artilheiros",
