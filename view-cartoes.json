@@ -1,58 +1,201 @@
 {
-    "data": {
-        "url": "../data/campeonato-brasileiro-estatisticas-full.csv"
-    },
-    "mark": {
-        "type": "bar"
-    },
-    "transform": [
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+
+    "params": [
         {
-            "filter": "datum.Director != null"
-        },
-        {
-            "aggregate": [
-                {
-                    "op": "sum",
-                    "field": "Worldwide_Gross",
-                    "as": "Gross"
-                }
-            ],
-            "groupby": [
-                "Director"
-            ]
-        },
-        {
-            "window": [
-                {
-                    "op": "rank",
-                    "as": "Rank"
-                }
-            ],
-            "sort": [
-                {
-                    "field": "Gross",
-                    "order": "descending"
-                }
-            ]
-        },
-        {
-            "filter": "datum.Rank < 20"
-        }
-    ],
-    "encoding": {
-        "x": {
-            "field": "Gross",
-            "type": "quantitative"
-        },
-        "y": {
-            "field": "Director",
-            "type": "nominal",
-            "sort": {
-                "field": "Gross",
-                "order": "descending"
+            "name": "SelectedYear",
+            "value": 2023,
+            "bind": {
+                "input": "select",
+                "options": [
+                    2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023
+                ],
+                "name": "Selecione o Ano: "
             }
         }
-    },
-    "width": 400,
-    "height": 400
+    ],
+    "align": "each",
+    "center": true,
+    "spacing": 0,
+    "columns": 2,
+    "concat": [
+        {
+            "title": "Quantidade de Cartões por Time e Rodada",
+            "data": { "url": "./data/campeonato-brasileiro-cartoes.csv" },
+            "transform": [
+                { "filter": "datum.ano == SelectedYear" },
+                {
+                    "aggregate": [
+                        { "op": "count", "field": "cartao", "as": "quantidade" }
+                    ],
+                    "groupby": ["rodada", "clube"]
+                }
+            ],
+            "mark": "rect",
+            "encoding": {
+                "x": {
+                    "field": "rodada",
+                    "type": "ordinal",
+                    "title": "Rodada",
+                    "axis": { "labelAngle": 0 },
+                    "sort": [
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5",
+                        "6",
+                        "7",
+                        "8",
+                        "9",
+                        "10",
+                        "11",
+                        "12",
+                        "13",
+                        "14",
+                        "15",
+                        "16",
+                        "17",
+                        "18",
+                        "19",
+                        "20",
+                        "21",
+                        "22",
+                        "23",
+                        "24",
+                        "25",
+                        "26",
+                        "27",
+                        "28",
+                        "29",
+                        "30",
+                        "31",
+                        "32",
+                        "33",
+                        "34",
+                        "35",
+                        "36",
+                        "37",
+                        "38"
+                    ]
+                },
+                "y": {
+                    "field": "clube",
+                    "type": "nominal",
+                    "title": "Time",
+                    "sort": "-color"
+                },
+                "color": {
+                    "field": "quantidade",
+                    "type": "quantitative",
+                    "title": "Quantidade de Cartões",
+                    "scale": { "scheme": "reds" }
+                },
+                "tooltip": [
+                    { "field": "clube", "title": "Time" },
+                    { "field": "rodada", "title": "Rodada" },
+                    { "field": "quantidade", "title": "Quantidade de Cartões" }
+                ]
+            },
+
+            "width": 500,
+            "height": 350
+        },
+        {
+            "title": "Contagem de Cartões",
+            "data": { "url": "./data/campeonato-brasileiro-cartoes.csv" },
+            "transform": [
+                { "filter": "datum.ano == SelectedYear" },
+                {
+                    "aggregate": [
+                        { "op": "count", "field": "cartao", "as": "quantidade" }
+                    ],
+                    "groupby": ["clube", "cartao"]
+                }
+            ],
+            "mark": "bar",
+            "encoding": {
+                "x": {
+                    "field": "clube",
+                    "title": "Time",
+                    "type": "nominal",
+                    "sort": "-y"
+                },
+                "y": {
+                    "field": "quantidade",
+                    "title": "Quantidade de Cartões",
+                    "type": "quantitative"
+                },
+                "xOffset": { "field": "cartao" },
+                "color": {
+                    "field": "cartao",
+                    "title": "Tipo de Cartão",
+                    "scale": {
+                        "domain": ["Amarelo", "Vermelho"],
+                        "range": ["yellow", "red"]
+                    }
+                },
+                "tooltip": [
+                    { "field": "clube", "title": "Time" },
+                    { "field": "cartao", "title": "Tipo de Cartão" },
+                    { "field": "quantidade", "title": "Quantidade" }
+                ]
+            },
+
+            "width": 500,
+            "height": 350
+        },
+        {
+            "title": "Quantidade de Cartões por Posição e Minuto",
+            "data": { "url": "./data/campeonato-brasileiro-cartoes.csv" },
+            "transform": [
+                { "filter": "datum.ano == SelectedYear" },
+                {
+                    "aggregate": [
+                        {
+                            "op": "count",
+                            "field": "cartao",
+                            "as": "quantidade_cartoes"
+                        }
+                    ],
+                    "groupby": ["minuto", "posicao"]
+                }
+            ],
+            "mark": {
+                "type": "line",
+                "point": true
+            },
+
+            "encoding": {
+                "x": {
+                    "field": "minuto",
+                    "type": "quantitative",
+                    "title": "Minuto do Jogo"
+                },
+                "y": {
+                    "field": "quantidade_cartoes",
+                    "type": "quantitative",
+                    "title": "Quantidade de Cartões",
+                    "scale": {
+                        "domain": [0, 20]
+                    }
+                },
+                "color": {
+                    "field": "posicao",
+                    "type": "nominal",
+                    "title": "Posição do Jogador"
+                },
+                "tooltip": [
+                    { "field": "minuto", "title": "Minuto" },
+                    { "field": "posicao", "title": "Posição" },
+                    {
+                        "field": "quantidade_cartoes",
+                        "title": "Quantidade de Cartões"
+                    }
+                ]
+            },
+
+            "width": 1000
+        }
+    ]
 }

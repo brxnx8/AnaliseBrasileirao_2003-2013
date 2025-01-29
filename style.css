@@ -1,0 +1,6 @@
+div#vis0, div#vis1, div#vis2, div#vis3{
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}

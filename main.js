@@ -3,14 +3,32 @@ let urlEstatisticasData = "../data/campeonato-brasileiro-estatisticas-full.csv";
 let urlPartidasData = "../data/campeonato-brasileiro-full.csv";
 let urlGolsData = "../data/campeonato-brasileiro-gols.csv";
 
-let urlCartoes = "../data/campeonato-brasileiro-cartoes.csv";
+let urlCartoes = "./view-cartoes.json";
 let urlEstatisticas = "./view-estatisticas.json";
-let urlPartidas = "../data/campeonato-brasileiro-full.csv";
-let urlGols = "../data/campeonato-brasileiro-gols.csv";
+let urlPartidas = "./view-partidas.json";
+let urlGols = "./view-gols.json";
 
-fetch(urlEstatisticas)
-    .then(res => res.json())
-        .then(out => {
-            vegaEmbed('#vis', out);
-        })
-    .catch(err => { throw err });
+let urlList = [urlCartoes, urlGols]
+    
+
+async function render(urlList) {
+    let index = 0
+    
+    for (url of urlList){
+        const id = `vis${index}`
+        const body  = document.querySelector('body');
+        const div = document.createElement('div');
+        div.id = id;
+        body.appendChild(div);
+        
+        const res = await fetch(url);
+        const out = await res.json();
+        vegaEmbed(`#${id}`, out);
+        index += 1;
+    }
+}
+
+render(urlList)
+
+
+
