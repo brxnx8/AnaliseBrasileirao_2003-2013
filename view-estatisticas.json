@@ -20,87 +20,9 @@
     "columns": 2,
     "concat": [
         {
-            "title": "Chutes Totais vs Chutes no Alvo e Gols por Clube",
-            "data": {
-                "url": "./data/campeonato-brasileiro-estatisticas-full.csv"
-            },
-            "transform": [
-                {
-                    "aggregate": [
-                        {
-                            "op": "sum",
-                            "field": "chutes",
-                            "as": "total_chutes"
-                        },
-                        {
-                            "op": "sum",
-                            "field": "chutes_no_alvo",
-                            "as": "total_chutes_no_alvo"
-                        }
-                    ],
-                    "groupby": ["partida_id", "clube"]
-                },
-                {
-                    "lookup": "partida_id",
-                    "from": {
-                        "data": {
-                            "url": "./data/campeonato-brasileiro-gols.csv"
-                        },
-                        "key": "partida_id",
-                        "fields": ["clube"]
-                    },
-                    "as": ["clube_gol"]
-                },
-                {
-                    "aggregate": [
-                        {
-                            "op": "count",
-                            "field": "clube_gol",
-                            "as": "total_gols"
-                        }
-                    ],
-                    "groupby": ["partida_id", "clube"]
-                }
-            ],
-            "mark": "point",
-            "encoding": {
-                "x": {
-                    "field": "total_chutes",
-                    "type": "quantitative",
-                    "title": "Total de Chutes"
-                },
-                "y": {
-                    "field": "total_chutes_no_alvo",
-                    "type": "quantitative",
-                    "title": "Total de Chutes no Alvo"
-                },
-                "size": {
-                    "field": "total_gols",
-                    "type": "quantitative",
-                    "title": "Total de Gols"
-                },
-                "color": {
-                    "field": "clube",
-                    "type": "nominal",
-                    "title": "Clube"
-                },
-                "tooltip": [
-                    { "field": "clube", "title": "Clube" },
-                    { "field": "total_chutes", "title": "Chutes Totais" },
-                    {
-                        "field": "total_chutes_no_alvo",
-                        "title": "Chutes no Alvo"
-                    },
-                    { "field": "total_gols", "title": "Gols Marcados" }
-                ]
-            },
-            "width": 700,
-            "height": 500
-        },
-        {
             "title": "Número de Impedimentos ao Longo dos Anos",
             "data": {
-                "url": "./data/campeonato-brasileiro-full.csv"
+                "url": "./data/campeonato-brasileiro-estatisticas-full.csv"
             },
             "transform": [
                 {
@@ -114,7 +36,10 @@
                     "groupby": ["ano"]
                 }
             ],
-            "mark": "line",
+            "mark": {
+                "type": "line",
+                "point": true
+            },
             "encoding": {
                 "x": {
                     "field": "ano",
@@ -136,6 +61,148 @@
             },
             "width": 700,
             "height": 400
+        },
+        {
+            "title": "Número de Faltas ao Longo dos Anos",
+            "data": {
+                "url": "./data/campeonato-brasileiro-estatisticas-full.csv"
+            },
+            "transform": [
+                {
+                    "aggregate": [
+                        {
+                            "op": "sum",
+                            "field": "faltas",
+                            "as": "total_faltas"
+                        }
+                    ],
+                    "groupby": ["ano"]
+                }
+            ],
+            "mark": {
+                "type": "line",
+                "point": true
+            },
+            "encoding": {
+                "x": {
+                    "field": "ano",
+                    "type": "ordinal",
+                    "title": "Ano"
+                },
+                "y": {
+                    "field": "total_faltas",
+                    "type": "quantitative",
+                    "title": "Total de faltas"
+                },
+                "tooltip": [
+                    { "field": "ano", "title": "Ano" },
+                    {
+                        "field": "total_faltas",
+                        "title": "Total de faltas"
+                    }
+                ]
+            },
+            "width": 700,
+            "height": 400
+        },
+        {
+            "title": "Número de Cartões Vermelhos ao Longo dos Anos",
+            "data": {
+                "url": "./data/campeonato-brasileiro-estatisticas-full.csv"
+            },
+            "transform": [
+                {
+                    "aggregate": [
+                        {
+                            "op": "sum",
+                            "field": "cartao_vermelho",
+                            "as": "total_cartao"
+                        }
+                    ],
+                    "groupby": ["ano"]
+                }
+            ],
+            "mark": {
+                "type": "line",
+                "point": true
+            },
+            "encoding": {
+                "x": {
+                    "field": "ano",
+                    "type": "ordinal",
+                    "title": "Ano"
+                },
+                "y": {
+                    "field": "total_cartao",
+                    "type": "quantitative",
+                    "title": "Total de cartao"
+                },
+                "tooltip": [
+                    { "field": "ano", "title": "Ano" },
+                    {
+                        "field": "total_cartao",
+                        "title": "Total de cartoes"
+                    }
+                ]
+            },
+            "width": 700,
+            "height": 400
+        },
+        {
+            "title": "Chutes Totais vs Chutes no Alvo e Gols por Clube",
+            "data": {
+                "url": "./data/campeonato-brasileiro-estatisticas-full.csv"
+            },
+            "transform": [
+                { "filter": "datum.ano == SelectedYear" },
+                
+                {
+                    "aggregate": [
+                        {
+                            "op": "sum",
+                            "field": "chutes",
+                            "as": "total_chutes"
+                        },
+                        {
+                            "op": "sum",
+                            "field": "chutes_no_alvo",
+                            "as": "total_chutes_no_alvo"
+                        }
+                    ],
+                    "groupby": ["clube"]
+                }
+            ],
+            "mark": "point",
+            "encoding": {
+                "x": {
+                    "field": "total_chutes",
+                    "type": "quantitative",
+                    "title": "Total de Chutes"
+                },
+                "y": {
+                    "field": "total_chutes_no_alvo",
+                    "type": "quantitative",
+                    "title": "Total de Chutes no Alvo"
+                },
+                "color": {
+                    "field": "clube",
+                    "type": "nominal",
+                    "title": "Clube"
+                },
+                "tooltip": [
+                    { "field": "clube", "title": "Clube" },
+                    { "field": "total_chutes", "title": "Chutes Totais" },
+                    {
+                        "field": "total_chutes_no_alvo",
+                        "title": "Chutes no Alvo"
+                    }
+                ]
+            },
+            "width": 700,
+            "height": 500
         }
+
+        
+        
     ]
 }
