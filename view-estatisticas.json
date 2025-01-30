@@ -16,146 +16,75 @@
     ],
     "align": "each",
     "center": true,
-    "spacing": 0,
+    "spacing": 20,
     "columns": 2,
     "concat": [
         {
-            "title": "Número de Impedimentos ao Longo dos Anos",
+            "title": "Faltas vs Cartões",
             "data": {
                 "url": "./data/campeonato-brasileiro-estatisticas-full.csv"
             },
             "transform": [
+                { "filter": "datum.ano == SelectedYear" },
                 {
-                    "aggregate": [
-                        {
-                            "op": "sum",
-                            "field": "impedimentos",
-                            "as": "total_impedimentos"
-                        }
-                    ],
-                    "groupby": ["ano"]
-                }
-            ],
-            "mark": {
-                "type": "line",
-                "point": true
-            },
-            "encoding": {
-                "x": {
-                    "field": "ano",
-                    "type": "ordinal",
-                    "title": "Ano"
+                    "calculate": "datum.cartao_vermelho + datum.cartao_amarelo",
+                    "as": "cartoes"
                 },
-                "y": {
-                    "field": "total_impedimentos",
-                    "type": "quantitative",
-                    "title": "Total de Impedimentos"
-                },
-                "tooltip": [
-                    { "field": "ano", "title": "Ano" },
-                    {
-                        "field": "total_impedimentos",
-                        "title": "Total de Impedimentos"
-                    }
-                ]
-            },
-            "width": 700,
-            "height": 400
-        },
-        {
-            "title": "Número de Faltas ao Longo dos Anos",
-            "data": {
-                "url": "./data/campeonato-brasileiro-estatisticas-full.csv"
-            },
-            "transform": [
+
                 {
                     "aggregate": [
                         {
                             "op": "sum",
                             "field": "faltas",
                             "as": "total_faltas"
-                        }
-                    ],
-                    "groupby": ["ano"]
-                }
-            ],
-            "mark": {
-                "type": "line",
-                "point": true
-            },
-            "encoding": {
-                "x": {
-                    "field": "ano",
-                    "type": "ordinal",
-                    "title": "Ano"
-                },
-                "y": {
-                    "field": "total_faltas",
-                    "type": "quantitative",
-                    "title": "Total de faltas"
-                },
-                "tooltip": [
-                    { "field": "ano", "title": "Ano" },
-                    {
-                        "field": "total_faltas",
-                        "title": "Total de faltas"
-                    }
-                ]
-            },
-            "width": 700,
-            "height": 400
-        },
-        {
-            "title": "Número de Cartões Vermelhos ao Longo dos Anos",
-            "data": {
-                "url": "./data/campeonato-brasileiro-estatisticas-full.csv"
-            },
-            "transform": [
-                {
-                    "aggregate": [
+                        },
                         {
                             "op": "sum",
-                            "field": "cartao_vermelho",
-                            "as": "total_cartao"
+                            "field": "cartoes",
+                            "as": "total_cartoes"
                         }
                     ],
-                    "groupby": ["ano"]
+                    "groupby": ["clube"]
                 }
             ],
-            "mark": {
-                "type": "line",
-                "point": true
-            },
+            "mark": { "type": "circle", "size": 100 },
             "encoding": {
                 "x": {
-                    "field": "ano",
-                    "type": "ordinal",
-                    "title": "Ano"
+                    "field": "total_faltas",
+                    "type": "quantitative",
+                    "title": "Total de Faltas"
                 },
                 "y": {
-                    "field": "total_cartao",
+                    "field": "total_cartoes",
                     "type": "quantitative",
-                    "title": "Total de cartao"
+                    "title": "Total de Cartões"
                 },
+                "color": {
+                    "field": "clube",
+                    "type": "nominal",
+                    "title": "Clube"
+                },
+
                 "tooltip": [
-                    { "field": "ano", "title": "Ano" },
+                    { "field": "clube", "title": "Clube" },
+                    { "field": "total_faltas", "title": "Faltas" },
                     {
-                        "field": "total_cartao",
-                        "title": "Total de cartoes"
+                        "field": "total_cartoes",
+                        "title": "Cartões"
                     }
                 ]
             },
-            "width": 700,
+            "width": 600,
             "height": 400
         },
         {
-            "title": "Chutes Totais vs Chutes no Alvo e Gols por Clube",
+            "title": "Chutes Totais vs Chutes no Alvo vs Gols por Clube",
             "data": {
                 "url": "./data/campeonato-brasileiro-estatisticas-full.csv"
             },
             "transform": [
                 { "filter": "datum.ano == SelectedYear" },
-                
+
                 {
                     "aggregate": [
                         {
@@ -167,12 +96,17 @@
                             "op": "sum",
                             "field": "chutes_no_alvo",
                             "as": "total_chutes_no_alvo"
+                        },
+                        {
+                            "op": "sum",
+                            "field": "gols",
+                            "as": "total_gols"
                         }
                     ],
                     "groupby": ["clube"]
                 }
             ],
-            "mark": "point",
+            "mark": "circle",
             "encoding": {
                 "x": {
                     "field": "total_chutes",
@@ -189,20 +123,26 @@
                     "type": "nominal",
                     "title": "Clube"
                 },
+                "size": {
+                    "field": "total_gols",
+                    "type": "quantitative",
+                    "title": "Gols"
+                },
                 "tooltip": [
                     { "field": "clube", "title": "Clube" },
                     { "field": "total_chutes", "title": "Chutes Totais" },
                     {
                         "field": "total_chutes_no_alvo",
                         "title": "Chutes no Alvo"
+                    },
+                    {
+                        "field": "total_gols",
+                        "title": "Gols"
                     }
                 ]
             },
-            "width": 700,
-            "height": 500
+            "width": 600,
+            "height": 400
         }
-
-        
-        
     ]
 }

@@ -1,0 +1,267 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+
+    "align": "each",
+    "center": true,
+    "spacing": 20,
+    "columns": 2,
+    "concat": [
+        {
+            "title": "Número de Impedimentos ao Longo dos Anos",
+            "data": {
+                "url": "./data/campeonato-brasileiro-estatisticas-full.csv"
+            },
+            "transform": [
+                {
+                    "aggregate": [
+                        {
+                            "op": "sum",
+                            "field": "impedimentos",
+                            "as": "total_impedimentos"
+                        }
+                    ],
+                    "groupby": ["ano"]
+                }
+            ],
+            "layer": [
+                {
+                    "mark": {
+                        "type": "line",
+                        "point": true
+                    },
+                    "encoding": {
+                        "x": {
+                            "field": "ano",
+                            "type": "ordinal",
+                            "title": "Ano"
+                        },
+                        "y": {
+                            "field": "total_impedimentos",
+                            "type": "quantitative",
+                            "title": "Total de Impedimentos"
+                        },
+                        "tooltip": [
+                            { "field": "ano", "title": "Ano" },
+                            {
+                                "field": "total_impedimentos",
+                                "title": "Total de Impedimentos"
+                            }
+                        ]
+                    }
+                },
+
+                {
+                    "mark": {
+                        "type": "rule",
+                        "strokeDash": [5, 5],
+                        "color": "red",
+                        "size": 0.2
+                    },
+                    "encoding": {
+                        "x": { "datum": "2019", "type": "ordinal" }
+                    }
+                }
+            ],
+            "width": 700,
+            "height": 400
+        },
+        {
+            "title": "Quantidade de vitória das principais formações ao longo dos anos",
+            "data": {
+                "url": "./data/campeonato-brasileiro-full.csv"
+            },
+            "transform": [
+                { "filter": "datum.vencedor != '-'" },
+
+                {
+                    "calculate": "datum.vencedor === datum.mandante ? datum.formacao_mandante : datum.formacao_visitante",
+                    "as": "formacao_vencedora"
+                },
+                {
+                    "filter": {
+                        "field": "formacao_vencedora",
+                        "oneOf": [
+                            "3-4-3",
+                            "3-1-4-2",
+                            "3-5-2",
+                            "3-4-2-1",
+                            "4-2-2-2",
+                            "4-2-3-1",
+                            "4-3-3",
+                            "4-4-2",
+                            "4-1-4-1",
+                            "5-3-2",
+                            "5-4-1"
+                        ]
+                    }
+                },
+                {
+                    "aggregate": [
+                        {
+                            "op": "count",
+                            "field": "formacao_vencedora",
+                            "as": "total_vitorias"
+                        }
+                    ],
+                    "groupby": ["ano", "formacao_vencedora"]
+                }
+            ],
+            "mark": {
+                "type": "line",
+                "point": true
+            },
+            "encoding": {
+                "x": {
+                    "field": "ano",
+                    "type": "ordinal",
+                    "title": "Ano",
+                    "axis": {
+                        "grid": true
+                    }
+                },
+                "y": {
+                    "field": "total_vitorias",
+                    "type": "ordinal",
+                    "title": "Quantidade de Vitórias",
+                    "sort": "-y",
+
+                    "axis": {
+                        "tickCount": 210,
+                        "grid": true
+                    }
+                },
+                "color": {
+                    "field": "formacao_vencedora",
+                    "type": "nominal",
+                    "title": "Formação"
+                },
+                "tooltip": [
+                    { "field": "ano", "title": "Ano" },
+                    { "field": "formacao_vencedora", "title": "Formação" },
+                    {
+                        "field": "total_vitorias",
+                        "title": "Quantidade de Vitórias"
+                    }
+                ]
+            },
+            "width": 700,
+            "height": 400
+        },
+        {
+            "title": "Número de Faltas ao Longo dos Anos",
+            "data": {
+                "url": "./data/campeonato-brasileiro-estatisticas-full.csv"
+            },
+            "transform": [
+                {
+                    "aggregate": [
+                        {
+                            "op": "sum",
+                            "field": "faltas",
+                            "as": "total_faltas"
+                        }
+                    ],
+                    "groupby": ["ano"]
+                }
+            ],
+            "layer": [
+                {
+                    "mark": {
+                        "type": "line",
+                        "point": true
+                    },
+                    "encoding": {
+                        "x": {
+                            "field": "ano",
+                            "type": "ordinal",
+                            "title": "Ano"
+                        },
+                        "y": {
+                            "field": "total_faltas",
+                            "type": "quantitative",
+                            "title": "Total de faltas"
+                        },
+                        "tooltip": [
+                            { "field": "ano", "title": "Ano" },
+                            {
+                                "field": "total_faltas",
+                                "title": "Total de faltas"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "mark": {
+                        "type": "rule",
+                        "strokeDash": [5, 5],
+                        "color": "red",
+                        "size": 0.2
+                    },
+                    "encoding": {
+                        "x": { "datum": "2019", "type": "ordinal" }
+                    }
+                }
+            ],
+            "width": 700,
+            "height": 400
+        },
+        {
+            "title": "Número de Cartões Vermelhos ao Longo dos Anos",
+            "data": {
+                "url": "./data/campeonato-brasileiro-estatisticas-full.csv"
+            },
+            "transform": [
+                {
+                    "aggregate": [
+                        {
+                            "op": "sum",
+                            "field": "cartao_vermelho",
+                            "as": "total_cartao"
+                        }
+                    ],
+                    "groupby": ["ano"]
+                }
+            ],
+            "layer": [
+                {
+                    "mark": {
+                        "type": "line",
+                        "point": true
+                    },
+                    "encoding": {
+                        "x": {
+                            "field": "ano",
+                            "type": "ordinal",
+                            "title": "Ano"
+                        },
+                        "y": {
+                            "field": "total_cartao",
+                            "type": "quantitative",
+                            "title": "Total de cartao"
+                        },
+                        "tooltip": [
+                            { "field": "ano", "title": "Ano" },
+                            {
+                                "field": "total_cartao",
+                                "title": "Total de cartoes"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "mark": {
+                        "type": "rule",
+                        "strokeDash": [5, 5],
+                        "color": "red",
+                        "size": 0.2
+                    },
+                    "encoding": {
+                        "x": { "datum": "2019", "type": "ordinal" }
+                    }
+                }
+            ],
+            "width": 700,
+            "height": 400
+        }
+    ]
+}

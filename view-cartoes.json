@@ -169,8 +169,118 @@
             "encoding": {
                 "x": {
                     "field": "minuto",
-                    "type": "quantitative",
-                    "title": "Minuto do Jogo"
+                    "type": "ordinal",
+                    "title": "Minuto do Jogo",
+                    "sort": [
+                        "1",
+                        "2",
+                        "3",
+                        "4",
+                        "5",
+                        "6",
+                        "7",
+                        "8",
+                        "9",
+                        "10",
+                        "11",
+                        "12",
+                        "13",
+                        "14",
+                        "15",
+                        "16",
+                        "17",
+                        "18",
+                        "19",
+                        "20",
+                        "21",
+                        "22",
+                        "23",
+                        "24",
+                        "25",
+                        "26",
+                        "27",
+                        "28",
+                        "29",
+                        "30",
+                        "31",
+                        "32",
+                        "33",
+                        "34",
+                        "35",
+                        "36",
+                        "37",
+                        "38",
+                        "39",
+                        "40",
+                        "41",
+                        "42",
+                        "43",
+                        "44",
+                        "45",
+                        "45+1",
+                        "45+2",
+                        "45+3",
+                        "45+4",
+                        "45+5",
+                        "45+6",
+                        "45+7",
+                        "45+8",
+                        "45+9",
+                        "46",
+                        "47",
+                        "48",
+                        "49",
+                        "50",
+                        "51",
+                        "52",
+                        "53",
+                        "54",
+                        "55",
+                        "56",
+                        "57",
+                        "58",
+                        "59",
+                        "60",
+                        "61",
+                        "62",
+                        "63",
+                        "64",
+                        "65",
+                        "66",
+                        "67",
+                        "68",
+                        "69",
+                        "70",
+                        "71",
+                        "72",
+                        "73",
+                        "74",
+                        "75",
+                        "76",
+                        "77",
+                        "78",
+                        "79",
+                        "80",
+                        "81",
+                        "82",
+                        "83",
+                        "84",
+                        "85",
+                        "86",
+                        "87",
+                        "88",
+                        "89",
+                        "90",
+                        "90+1",
+                        "90+2",
+                        "90+3",
+                        "90+4",
+                        "90+5",
+                        "90+6",
+                        "90+7",
+                        "90+8",
+                        "90+9"
+                    ]
                 },
                 "y": {
                     "field": "quantidade_cartoes",
@@ -195,7 +305,53 @@
                 ]
             },
 
-            "width": 1000
+            "width": 1000,
+            "height": 350
+        },
+        {
+            "title": "Top 10 Atletas com mais cartão",
+            "data": { "url": "./data/campeonato-brasileiro-cartoes.csv" },
+            "transform": [
+                { "filter": "datum.ano == SelectedYear" },
+                {
+                    "aggregate": [
+                        { "op": "count", "field": "atleta", "as": "cartoes" }
+                    ],
+                    "groupby": ["atleta", "clube", "posicao"]
+                },
+                {
+                    "sort": [{ "field": "cartoes", "order": "descending" }],
+                    "window": [
+                        {
+                            "op": "rank",
+                            "field": "cartoes",
+                            "as": "rank"
+                        }
+                    ]
+                },
+                { "filter": "datum.rank <= 10" }
+            ],
+            "mark": "bar",
+            "encoding": {
+                "y": {
+                    "sort": "-x",
+                    "field": "atleta",
+                    "title": "Atleta",
+                    "type": "ordinal"
+                },
+                "x": {
+                    "field": "cartoes",
+                    "title": "Cartoes",
+                    "type": "quantitative"
+                },
+                "tooltip": [
+                    { "field": "atleta", "title": "Atleta" },
+                    { "field": "cartoes", "title": "Cartões" },
+                    { "field": "posicao", "title": "Posição" }
+                ]
+            },
+            "width": 200,
+            "height": 350
         }
     ]
 }

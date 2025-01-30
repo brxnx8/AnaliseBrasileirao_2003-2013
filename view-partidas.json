@@ -16,7 +16,7 @@
     ],
     "align": "each",
     "center": true,
-    "spacing": 0,
+    "spacing": 20,
     "columns": 2,
     "concat": [
         {
@@ -118,63 +118,6 @@
             },
 
             "width": 800
-        },
-        {
-            "title": "Formações Vencedoras ao longo dos Anos",
-            "data": {
-                "url": "./data/campeonato-brasileiro-full.csv"
-            },
-            "transform": [
-                { "filter": "datum.vencedor != '-'" },
-                {
-                    "calculate": "datum.vencedor === datum.mandante ? datum.formacao_mandante : datum.formacao_visitante",
-                    "as": "formacao_vencedora"
-                },
-                
-                {
-                    "calculate": "datum.formacao_vencedora ? datum.formacao_vencedora : 'Desconhecida'",
-                    "as": "formacao_vencedora"
-                },
-                {
-                    "aggregate": [
-                        {
-                            "op": "count",
-                            "field": "formacao_vencedora",
-                            "as": "total_vitorias"
-                        }
-                    ],
-                    "groupby": ["ano", "formacao_vencedora"]
-                }
-            ],
-            "mark": {
-                "type": "rect"
-            },
-            "encoding": {
-                "x": {
-                    "field": "ano",
-                    "type": "ordinal",
-                    "title": "Ano"
-                },
-                "y": {
-                    "field": "total_vitorias",
-                    "type": "quantitative",
-                    "title": "Quantidade de Vitórias"
-                },
-                "color": {
-                    "field": "formacao_vencedora",
-                    "type": "nominal",
-                    "title": "Formação"
-                },
-                "tooltip": [
-                    { "field": "ano", "title": "Ano" },
-                    { "field": "formacao_vencedora", "title": "Formação" },
-                    {
-                        "field": "total_vitorias",
-                        "title": "Quantidade de Vitórias"
-                    }
-                ]
-            },
-            "width": 700
         }
     ]
 }

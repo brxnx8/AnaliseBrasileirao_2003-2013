@@ -7,8 +7,9 @@ let urlCartoes = "./view-cartoes.json";
 let urlEstatisticas = "./view-estatisticas.json";
 let urlPartidas = "./view-partidas.json";
 let urlGols = "./view-gols.json";
+let urlPorAno = "./view-por-ano.json";
 
-let urlList = [urlCartoes, urlGols, urlPartidas, urlEstatisticas]
+let urlList = [urlGols, urlPartidas, urlEstatisticas, urlCartoes, urlPorAno]
     
 
 async function render(urlList) {
